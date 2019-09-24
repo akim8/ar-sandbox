@@ -73,16 +73,6 @@ package to work.
 
 ## Scripts Attached to the AR Session
 
-### ARSession.cs
-
-This just needs to exist in the scene. It oversees the operation of the AR
-Foundation package.
-
-### SetTargetFramerate.cs
-
-Sets the framerate of the camera feed to be something more comfortable than the
-default.
-
 ### ARPlaneManager.cs
 
 This just needs to exist to tell AR Foundation to detect surfaces. An object set

@@ -13,3 +13,7 @@
 # Google Service Account Key
 *.sak.json
 *.sak.json.meta
+
+# Google Cloud API Key
+*.apikey.txt
+*.apikey.txt.meta

@@ -18,6 +18,7 @@ public class GetDeviceImage : MonoBehaviour
 {
     public TMP_Text displayText;
     public Button pasteButton;
+    public GameObject testOrbPrefab;
 
     private NativeArray<byte> rawData;
     private XRCameraImageConversionParams conversionParams;
@@ -49,6 +50,8 @@ public class GetDeviceImage : MonoBehaviour
 
     private void OnEnable()
     {
+        // find the cameraManager to get the camera feed from
+
         cameraManager = GameObject.Find("AR Camera").GetComponent<ARCameraManager>();
 
         if (cameraManager != null)
@@ -63,12 +66,15 @@ public class GetDeviceImage : MonoBehaviour
 
     private void OnDisable()
     {
+        // stop getting camera feed
+
         if (cameraManager != null)
         {
             cameraManager.frameReceived -= OnCameraFrameReceived;
         }
     }
 
+    // converts camera feed to byte array every frame - could be optimized?
     void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
     {
         // https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@3.0/manual/cpu-camera-image.html#asynchronously-convert-to-grayscale-and-color
@@ -80,12 +86,13 @@ public class GetDeviceImage : MonoBehaviour
             return;
         }
 
-        StartCoroutine(ProcessImage(image));
+        StartCoroutine(ProcessImage(image)); // send image to coroutine to asynchronously process
 
         image.Dispose();
     }
 
-    IEnumerator ProcessImage(XRCameraImage image)
+    // converts image into native byte array
+    IEnumerator ProcessImage(XRCameraImage image) 
     {
         var request = image.ConvertAsync(new XRCameraImageConversionParams
         {
@@ -120,6 +127,10 @@ public class GetDeviceImage : MonoBehaviour
 
     async void PasteButtonAction()
     {
+        // convert native byte array into texture - if a way to convert
+        // NativeArray<byte> into byte[] was found, then this step could be
+        // skipped and resources could be saved.
+
         var tex = new Texture2D(
                 conversionParams.outputDimensions.x,
                 conversionParams.outputDimensions.y,
@@ -129,15 +140,20 @@ public class GetDeviceImage : MonoBehaviour
         tex.LoadRawTextureData(rawData);
         tex.Apply();
 
+        // get byte array from texture
         // https://answers.unity.com/questions/712673/how-to-encode-an-image-to-a-base64-string.html
 
         byte[] bytes = tex.EncodeToPNG();
 
+        // convert byte array to base64 string
         string imageBase64 = Convert.ToBase64String(bytes);
 
-        displayText.text = imageBase64.Length.ToString();
+        // send encoded image to API of choice
+
+        displayText.text = imageBase64.Length.ToString(); // for loading, also good way to tell if request has surpassed character limit (I think it's 1,000,000 characters)
         //displayText.text = await SendStringToPastecode(imageBase64);
-        displayText.text = await SendStringToVisionAI(imageBase64, "OBJECT_LOCALIZATION");
+        //displayText.text = await SendStringToVisionAI(imageBase64, "OBJECT_LOCALIZATION"); // object recognition
+        displayText.text = await SendStringToVisionAI(imageBase64, "TEXT_DETECTION");
     }
 
     private async Task<string> SendStringToPastecode(string text)
@@ -171,6 +187,27 @@ public class GetDeviceImage : MonoBehaviour
 
         Debug.Log(responseString);
 
-        return responseString;
+        if (!response.IsSuccessStatusCode)
+        {
+            return response.StatusCode.ToString();
+        }
+
+        // do something with response
+
+        if (featureType == "TEXT_DETECTION")
+        {
+            /* TODO: create floating frames for detected text in AR
+             *
+             * extract text and bounding coordinates from json
+             * create frame based on coordinates in the scene
+             * attach labels with the detected text to each frame
+             * separate this into a new script/function
+             * 
+             */
+
+            //GameObject testOrb1 = Instantiate(testOrbPrefab, Camera.main.ScreenToWorldPoint(new Vector3(x, y)), Camera.main.transform.rotation); // only spawns object in center of screen... why?
+        }
+
+        return response.StatusCode.ToString();
     }
 }

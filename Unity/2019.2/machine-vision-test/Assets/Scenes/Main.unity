@@ -165,6 +165,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayText: {fileID: 1188078937}
   pasteButton: {fileID: 1970844442}
+  testOrbPrefab: {fileID: 5676043786374215958, guid: d0cd03c02f3954e6e9e4727851e7cdcb,
+    type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,7 +240,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 3e-45, z: 4.544e-42, w: 1.05e-43}
+  m_BoundingSphereOverride: {x: 4.5915e-41, y: 1.2647747e-36, z: 1e-45, w: -9.248566e+27}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -356,8 +358,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000061035, y: 189.67}
-  m_SizeDelta: {x: 2048, y: 2352.7}
+  m_AnchoredPosition: {x: 0.000011444, y: 143.33}
+  m_SizeDelta: {x: 1870.3, y: 2260.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1188078937
 MonoBehaviour:
@@ -405,8 +407,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 100
-  m_fontSizeBase: 100
+  m_fontSize: 64
+  m_fontSizeBase: 64
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -750,7 +752,7 @@ GameObject:
   - component: {fileID: 1436919576}
   m_Layer: 0
   m_Name: AR Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1007,7 +1009,7 @@ GameObject:
   - component: {fileID: 1970844443}
   - component: {fileID: 1970844442}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Scan Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

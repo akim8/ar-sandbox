@@ -189,7 +189,7 @@ public class GetDeviceImage : MonoBehaviour
 
         if (!response.IsSuccessStatusCode)
         {
-            return response.StatusCode.ToString();
+            return "Response status code: " + response.StatusCode.ToString();
         }
 
         // do something with response
@@ -198,16 +198,67 @@ public class GetDeviceImage : MonoBehaviour
         {
             /* TODO: create floating frames for detected text in AR
              *
-             * extract text and bounding coordinates from json
-             * create frame based on coordinates in the scene
+             * get surface that object is on
+             * create frame on surface based on coordinates from text detection (use raycasting from screenspace coordinates to surface)
              * attach labels with the detected text to each frame
-             * separate this into a new script/function
+             * cleanup (separate this into a new script/function)
+             *
+             * remember, response can be empty
+             * { "responses": [ {} ] }
              * 
              */
+
+            Debug.Log(responseString);
+
+            // get just the textAnnotations from the response
+            if (responseString.Contains("textAnnotations"))
+            {
+                // hardcoded way to shorten json response
+                int begin = responseString.IndexOf("responses");
+                int end = responseString.IndexOf("fullTextAnnotation");
+                string alteredResponse = responseString.Remove(end - 1).Trim().Remove(0, begin + 13);
+                alteredResponse = alteredResponse.Remove(alteredResponse.Length - 2) + "]}";
+
+                Debug.Log(alteredResponse);
+                Debug.Log(">>>>> Finished json string manip");
+
+                TextAnnotationWrapper<TextAnnotation> taWrapper = JsonUtility.FromJson<TextAnnotationWrapper<TextAnnotation>>(alteredResponse);
+
+                foreach (var x in taWrapper.textAnnotations)
+                {
+                    Debug.Log(x.description);
+                }
+            }
 
             //GameObject testOrb1 = Instantiate(testOrbPrefab, Camera.main.ScreenToWorldPoint(new Vector3(x, y)), Camera.main.transform.rotation); // only spawns object in center of screen... why?
         }
 
         return response.StatusCode.ToString();
     }
+}
+
+[Serializable]
+public class TextAnnotationWrapper<TextAnnotation>
+{
+    public TextAnnotation[] textAnnotations;
+}
+
+[Serializable]
+public class TextAnnotation {
+    public string locale;
+    public string description;
+    public BoundingPoly boundingPoly;
+}
+
+[Serializable]
+public class BoundingPoly
+{
+    public Vertex[] verticies = new Vertex[4];
+}
+
+[Serializable]
+public class Vertex
+{
+    public int x = 0;
+    public int y = 0;
 }

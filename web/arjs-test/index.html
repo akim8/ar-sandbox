@@ -1,0 +1,29 @@
+<!doctype HTML>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>AR.js demo</title>
+	<script src='https://aframe.io/releases/0.9.2/aframe.min.js'></script>
+	<script src='scripts/aframe-ar.min.js'></script>
+</head>
+
+<body style='margin : 0px; overflow: hidden;'>
+	<a-scene embedded vr-mode-ui="enabled: false;" arjs="debugUIEnabled: false;">
+
+		<a-marker preset="hiro">
+			<a-box position="0 0.5 0" material="color: red; transparent: true; opacity: .5;"></a-box>
+		</a-marker>
+
+		<a-marker preset="custom" type="pattern" url="patterns/pattern-blockm.patt">
+			<a-box position="0 0.5 0" scale="2 2 2" material="color: green; transparent: true; opacity: .5;"></a-box>
+			<a-entity position="0 3 0.5" gltf-model="url(models/snow-globe-model/model.gltf)"></a-entity>
+		</a-marker>
+
+		<a-entity camera></a-entity>
+
+	</a-scene>
+</body>
+
+</html>

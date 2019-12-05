@@ -1,0 +1,20 @@
+body {
+
+    /* fix body after library applies in-line styling */
+    margin: 0;
+    overflow: hidden;
+}
+
+.user-coords-display {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #000000aa;
+    color: #fff;
+}
+.user-coords-display p {
+    margin: 5px 8px;
+}
+.user-coords-display p a {
+    color: #86cfff;
+}
